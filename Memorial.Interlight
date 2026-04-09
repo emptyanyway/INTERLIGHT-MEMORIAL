@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Память</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=Inter&display=swap" rel="stylesheet">
+<style>
+body { margin:0; padding:30px; background:#0b0b0b; color:#eee; font-family:'Inter',sans-serif; animation:fadeIn 1s ease; }
+@keyframes fadeIn {from{opacity:0}to{opacity:1}}
+h1 { text-align:center; font-family:'Cormorant Garamond',serif; font-size:40px; margin-bottom:40px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.card { background:#141414; border-radius:12px; overflow:hidden; cursor:pointer; transform:translateY(20px); opacity:0; transition:.4s; }
+.card.show { transform:translateY(0); opacity:1; }
+.card:hover { transform:translateY(-8px) scale(1.01); }
+.card img { width:100%; height:260px; object-fit:cover; filter:grayscale(40%); transition:.5s; }
+.card:hover img { filter:grayscale(0%); }
+.card h2 { margin:10px; font-family:'Cormorant Garamond',serif; }
+.card p { margin:0 10px 10px; color:#aaa; }
+.profile { max-width:600px; margin:40px auto; text-align:center; animation:fadeUp .8s ease; }
+@keyframes fadeUp { from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:translateY(0)} }
+.profile img { width:100%; border-radius:12px; margin-bottom:20px; }
+a { color:#aaa; text-decoration:none; }
+a:hover { color:#fff; }
+</style>
+</head>
+<body>
+
+<h1>Память</h1>
+<div id="app"></div>
+
+<script>
+const people = [
+ { name: "Янузаева Лилия Альваровна", dates: "03.02.2003 — 13.04.2024", image: "https://i.ibb.co/Mycgtf69/image.jpg", desc: "Лилия родилась 3 февраля 2003 года в Волгограде. Последние годы занималась бизнесом, завязанным на сдаче готовых квартир в аренду. Трагически ушла из жизни 13 апреля 2024 года." },
+ { name: "Ляйзова Вероника Тимофеевна", dates: "09.04.2002 — 16.01.2025", image: "https://i.ibb.co/Yy8tXgh/image.jpg", desc: "Вероника Ляйзова — гражданка Италии. Любила путешествовать и училась в авиауниверситете на стюардессу. 16 января утонула в ледяной воде озера Альбано." },
+ { name: "Одинцов Дамир Валерьевич", dates: "15.04.2000 — 16.03.2025", image: "https://i.ibb.co/qJ0p4cB/image.jpg", desc: "Дамир Одинцов родом из Москвы. Половину своей жизни отдал спорту. Во время срочной службы подписал контракт, по окончании которого его призвали на фронт, где он и погиб." },
+ { name: "Фенцов Кирилл Дмитриевич", dates: "12.08.2001 — 08.07.2025", image: "https://i.ibb.co/2v3hZ9J/image.jpg", desc: "Кирилл Фенцов — парень из Москвы, который после расставания с девушкой призвался на срочную службу, где совершил акт самоубийства." },
+ { name: "Куваева Милада Владимировна", dates: "20.06.2005 — 19.07.2025", image: "https://i.ibb.co/3h0vYfV/image.jpg", desc: "Милада родилась в Москве, но в раннем возрасте семья переехала в Дублин, Ирландия. После гибели родителей покончила с жизнью." },
+ { name: "Шевчук Валерия Алексеевна", dates: "19.08.2005 — 27.10.2025", image: "https://i.ibb.co/7Wz9mY7/image.jpg", desc: "Валерия Шевчук — уроженка Харькова. Осенью 2025 года получила осколочное ранение и скончалась." },
+ { name: "Мизатова Диляра Камильевна", dates: "01.12.2006 — 01.12.2025", image: "https://i.ibb.co/Zd7n8Qw/image.jpg", desc: "Диляра Мизатова — крымская татарка. В результате конфликта с местными жителями погибла." },
+ { name: "Смолов Евгений Александрович", dates: "10.01.1998 — 21.12.2025", image: "https://i.ibb.co/8K3tV1n/image.jpg", desc: "Евгений родился в Курске. В 2020 году начал проходить срочную службу, а в 2021 году после свадьбы подписал контракт. Самолёт под его управлением был сбит." },
+ { name: "Смолова Екатерина Николаевна", dates: "21.10.1999 — 21.12.2025", image: "https://i.ibb.co/Fb8t2n2/image.jpg", desc: "Екатерина — проводница РЖД, жена Евгения Смолова. Узнав о гибели мужа, покончила жизнь самоубийством в тот же день." },
+ { name: "Черникова Екатерина Сергеевна", dates: "13.09.1999 — 11.02.2026", image: "https://i.ibb.co/Ykg4x2C/image.jpg", desc: "Екатерина родилась в Реутове Московской области. Впоследствии была похищена и погибла в Лаосе." },
+ { name: "Левандовская Элеонора Григорьевна", dates: "10.03.2005 — 19.02.2026", image: "https://i.ibb.co/7g3NxZs/image.jpg", desc: "Элеонора родилась в Волгограде. На протяжении двух лет боролась с болезнью спины. В 2026 году отправилась на операцию в Израиль, которая не помогла." },
+ { name: "Гаязова Софья Денисовна", dates: "01.03.2004 — 24.02.2026", image: "https://i.ibb.co/3S7w2dq/image.jpg", desc: "Софья родилась в Ухте. В феврале 2026 года на Кипре молодая пара совершила суицид." },
+ { name: "Кайлова Анна Сергеевна", dates: "14.06.2002 — 02.03.2026", image: "https://i.ibb.co/5R5s9J7/image.jpg", desc: "Анна Кайлова родилась в Химках. В последний год имела серьёзные проблемы с законом. Обнаружена мёртвой в камере ИВС Санкт-Петербурга." }
+];
+
+const app = document.getElementById("app");
+
+function showList() {
+ app.innerHTML = '<div class="grid" id="grid"></div>';
+ const grid = document.getElementById("grid");
+ people.forEach((p,i)=>{
+  const el=document.createElement("div");
+  el.className="card";
+  el.innerHTML=`<img src="${p.image || 'https://via.placeholder.com/400x500?text=Фото'}"><h2>${p.name}</h2><p>${p.dates}</p>`;
+  el.onclick=()=>showProfile(i);
+  grid.appendChild(el);
+  setTimeout(()=>el.classList.add("show"), i*120);
+ });
+}
+
+function showProfile(i){
+ const p=people[i];
+ app.innerHTML=`<div class="profile"><a href="#" onclick="showList()">← Назад</a><img src="${p.image || 'https://via.placeholder.com/400x500?text=Фото'}"><h1>${p.name}</h1><p>${p.dates}</p><p>${p.desc}</p></div>`;
+}
+
+showList();
+</script>
+</body>
+</html>
