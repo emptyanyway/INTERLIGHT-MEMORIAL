@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Memory</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=Inter&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+  margin:0;
+  padding:20px;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 40%),
+    linear-gradient(135deg,#050505,#121212);
+  color:#eee;
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop') center/cover;
+  opacity:.08;
+  z-index:-2;
+}
+
+body::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  backdrop-filter: blur(6px);
+  z-index:-1;
+}
+
+h1 {
+  text-align:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;
+  margin:10px 0 15px;
+}
+
+.lang {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.lang a {
+  color:#aaa;
+  text-decoration:none;
+  margin:0 10px;
+  transition:.3s;
+}
+
+.lang a:hover {
+  color:#fff;
+}
+
+.search {
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  margin-bottom:25px;
+  font-size:16px;
+  outline:none;
+  backdrop-filter:blur(10px);
+  box-sizing:border-box;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:18px;
+}
+
+.card {
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  transition:.4s;
+  border:1px solid rgba(255,255,255,0.05);
+
+  opacity:0;
+  transform:translateY(20px);
+}
+
+.card.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+
+.card img {
+  width:100%;
+  height:280px;
+  object-fit:cover;
+  transition:.5s;
+}
+
+.card:hover img {
+  transform:scale(1.05);
+}
+
+.card::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.9), transparent 60%);
+}
+
+.card h2,
+.card p {
+  position:absolute;
+  left:14px;
+  z-index:2;
+}
+
+.card h2 {
+  bottom:38px;
+  margin:0;
+  font-size:20px;
+  font-family:'Cormorant Garamond',serif;
+}
+
+.card p {
+  bottom:14px;
+  margin:0;
+  color:#bbb;
+  font-size:13px;
+}
+
+.profile {
+  max-width:700px;
+  margin:auto;
+  animation:fade .5s ease;
+}
+
+.profile img {
+  width:100%;
+  border-radius:20px;
+  margin-bottom:20px;
+}
+
+.profile p {
+  line-height:1.7;
+  color:#ccc;
+}
+
+.back {
+  display:inline-block;
+  margin-bottom:20px;
+  color:#aaa;
+  text-decoration:none;
+}
+
+.back:hover {
+  color:#fff;
+}
+
+@keyframes fade {
+  from {
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:600px){
+
+  h1 {
+    font-size:34px;
+  }
+
+  .card img {
+    height:240px;
+  }
+
+}
+.lang{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.lang a{
+  color:#aaa;
+  text-decoration:none;
+  margin:0 10px;
+  transition:.3s;
+}
+
+.lang a:hover{
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Memory</h1>
+<div class="lang">
+  <a href="index.html">RU</a>
+  <a href="en.html">EN</a>
+</div>
+
+
+<input
+type="text"
+class="search"
+placeholder="Search..."
+oninput="searchPeople(this.value)"
+>
+
+<div id="app"></div>
+
+<script>
+
+const people = [
+
+{
+name:"Lilia Yanuzaeva",
+dates:"03.02.2003 — 13.04.2024",
+image:"https://via.placeholder.com/400x500?text=No+Photo",
+desc:"Lilia was born in Volgograd on February 3, 2003. In recent years she worked in apartment rental business. She tragically died in a car accident in central Moscow."
+},
+
+{
+name:"Veronica Lyazova",
+dates:"09.04.2002 — 16.01.2025",
+image:"https://i.ibb.co/p64cmvK7/IMG-1181.jpg",
+desc:"Veronica Lyazova was an Italian citizen. She loved traveling and studied to become a flight attendant. On January 16 she drowned in the icy waters of Lake Albano."
+},
+
+{
+name:"Damir Odintsov",
+dates:"15.04.2000 — 16.03.2025",
+image:"https://i.ibb.co/DfR0MhtS/IMG-1182.jpg",
+desc:"Damir Odintsov was born in Moscow. He devoted half of his life to sports. During military service he signed a contract and later died at the front."
+},
+
+{
+name:"Kirill Fentsov",
+dates:"12.08.2001 — 08.07.2025",
+image:"https://via.placeholder.com/400x500?text=No+Photo",
+desc:"Kirill Fentsov was a young man from Moscow who joined military service after a difficult breakup. During service he tragically took his own life."
+},
+
+{
+name:"Milada Kuvaeva",
+dates:"20.06.2005 — 19.07.2025",
+image:"https://i.ibb.co/Dg70Sz01/IMG-1183.jpg",
+desc:"Milada was born in Moscow but moved to Dublin, Ireland, with her family at a young age. After the death of her parents she suffered from severe depression."
+},
+
+{
+name:"Valeria Shevchuk",
+dates:"19.08.2005 — 27.10.2025",
+image:"https://i.ibb.co/7JrST55k/IMG-1184.jpg",
+desc:"Valeria Shevchuk was born in Kharkiv and moved to Kyiv shortly before the war. In autumn 2025 she died after being injured during shelling."
+},
+
+{
+name:"Dilyara Mizatova",
+dates:"01.12.2006 — 01.12.2025",
+image:"https://i.ibb.co/wrFXdWCY/IMG-1185.jpg",
+desc:"Dilyara Mizatova spent most of 2025 traveling across Russia with her boyfriend. During a trip abroad both of them tragically lost their lives after a violent conflict."
+},
+
+{
+name:"Evgeny Smolov",
+dates:"10.01.1998 — 21.12.2025",
+image:"https://via.placeholder.com/400x500?text=No+Photo",
+desc:"Evgeny was born in Kursk. He served in the air forces and later became a contract soldier. His aircraft was shot down near Kabul."
+},
+
+{
+name:"Ekaterina Smolova",
+dates:"21.10.1999 — 21.12.2025",
+image:"https://i.ibb.co/1tQyQPqM/IMG-1186.jpg",
+desc:"Ekaterina worked as a railway attendant and was the wife of Evgeny Smolov. After learning about her husband's death, she tragically took her own life."
+},
+
+{
+name:"Ekaterina Chernikova",
+dates:"13.09.1999 — 11.02.2026",
+image:"https://i.ibb.co/DHBJVF94/IMG-1187.jpg",
+desc:"Ekaterina was born in the Moscow region and worked as a journalist. After accepting a job offer abroad she was kidnapped and later died in Laos."
+},
+
+{
+name:"Eleonora Levandovskaya",
+dates:"10.03.2005 — 19.02.2026",
+image:"https://i.ibb.co/gZhYsNzM/IMG-1189.jpg",
+desc:"Eleonora was born in Volgograd and later moved to Moscow for university. She spent years fighting a serious spinal illness."
+},
+
+{
+name:"Sofya Gayazova",
+dates:"01.03.2004 — 24.02.2026",
+image:"https://i.ibb.co/hJnLYy8c/IMG-1190.jpg",
+desc:"Sofya was born in Ukhta but spent most of her life in Volgograd. After graduating from the police academy she moved to Cyprus where she later died together with her partner."
+},
+
+{
+name:"Sofia Zaitseva",
+dates:"05.02.2007 — 16.05.2026",
+image:"https://i.ibb.co/vxt3Cpch/IMG-2628.jpg",
+desc:"Sofia was born in Voronezh. In recent years she struggled with substance abuse which eventually led to a fatal overdose."
+},
+
+{
+name:"Roman Dankov",
+dates:"17.12.2003 — 12.04.2026",
+image:"https://i.ibb.co/PGkn4v4g/IMG-2629.jpg",
+desc:"Roman was born in Moscow in 2003. He worked as an engineer before joining military service. After a conflict in a local bar he suffered fatal injuries."
+}
+
+];
+
+const app = document.getElementById("app");
+
+function showList(){
+
+  app.innerHTML =
+  '<div class="grid" id="grid"></div>';
+
+  const grid =
+  document.getElementById("grid");
+
+  people.forEach((p,i)=>{
+
+    const el =
+    document.createElement("div");
+
+    el.className="card";
+
+    el.innerHTML=`
+      <img src="${p.image}">
+      <h2>${p.name}</h2>
+      <p>${p.dates}</p>
+    `;
+
+    el.onclick=()=>showProfile(i);
+
+    grid.appendChild(el);
+
+    setTimeout(()=>{
+      el.classList.add("show");
+    },i*100);
+
+  });
+
+}
+
+function showProfile(i){
+
+  const p = people[i];
+
+  app.innerHTML = `
+    <div class="profile">
+
+      <a
+      href="#"
+      class="back"
+      onclick="showList()"
+      >
+      ← Back
+      </a>
+
+      <img src="${p.image}">
+
+      <h1>${p.name}</h1>
+
+      <p>${p.dates}</p>
+
+      <p>${p.desc}</p>
+
+    </div>
+  `;
+}
+
+function searchPeople(value){
+
+  const cards =
+  document.querySelectorAll(".card");
+
+  cards.forEach(card=>{
+
+    const text =
+    card.innerText.toLowerCase();
+
+    card.style.display =
+      text.includes(value.toLowerCase())
+      ? "block"
+      : "none";
+
+  });
+
+}
+
+showList();
+
+</script>
+
+</body>
+</html>
