@@ -5,6 +5,22 @@
 <title>Память</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=Inter&display=swap" rel="stylesheet">
 <style>
+.lang{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.lang a{
+  color:#aaa;
+  text-decoration:none;
+  margin:0 10px;
+  transition:.3s;
+}
+
+.lang a:hover{
+  color:#fff;
+}
+
 body {
   margin:0;
   padding:20px;
@@ -175,12 +191,31 @@ h1 {
     font-size:15px;
   }
 }
+.lang{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.lang a{
+  color:#aaa;
+  text-decoration:none;
+  margin:0 10px;
+  transition:.3s;
+}
+
+.lang a:hover{
+  color:#fff;
+}х
 </style>
 
 </head>
 <body>
 
 <h1>Память</h1>
+<div class="lang">
+  <a href="index.html">RU</a>
+  <a href="en.html">EN</a>
+</div>
 <input type="text" class="search" placeholder="Поиск..." oninput="searchPeople(this.value)">
 <div id="app"></div>
 
